@@ -3,6 +3,7 @@ import api from '../../services/api'
 import logo from '../../assets/logo.svg'
 
 import { MdInsertDriveFile } from 'react-icons/md'
+import Dropzone from 'react-dropzone'
 import './styles.css'
 
 export default class Box extends Component {
@@ -22,6 +23,17 @@ export default class Box extends Component {
     })
   }
 
+  handleUpload = (files) => {
+    files.forEach(file => {
+      const data = new FormData()
+      const box = this.props.match.params.id
+
+      data.append('file', file)
+
+      api.post(`boxes/${box}/files`, data)
+    })
+  }
+
   render () {
     return (
       <div id='box__container'>
@@ -29,10 +41,20 @@ export default class Box extends Component {
           <img src={logo} alt='logo' />
           <h1>{this.state.box.title}</h1>
         </header>
+
+        <Dropzone onDropAccepted={this.handleUpload}>
+          {({ getRootProps, getInputProps }) => (
+            <div className='upload' {...getRootProps()}>
+              <input {...getInputProps()} />
+              <p>Arraste arquivos ou clique aqui...</p>
+            </div>
+          )}
+        </Dropzone>
+
         <ul>
           {this.state.box.files &&
             this.state.box.files.map(file => (
-              <li>
+              <li key={file._id}>
                 <a href={file.url} className='file__info' target='_blank'>
                   <MdInsertDriveFile size={24} color='#A5Cfff' />
                   <strong>{file.title}</strong>
