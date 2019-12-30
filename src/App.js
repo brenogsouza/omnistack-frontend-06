@@ -1,9 +1,9 @@
 import React from 'react'
-import { Main } from './pages'
+import Routes from './routes'
 
 function App () {
   return (
-    <Main />
+    <Routes />
   )
 }
 
